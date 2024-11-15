@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { PagesList } from './PagesList'
-
-// import and prepend the api url to any fetch calls
 import apiURL from '../api'
-
+import { PagesList } from './PagesList';
+import { Page, Pageview } from './Page';
 export const App = () => {
   const [pages, setPages] = useState([])
-
+  const [selectedPage, setSelectedPage] = useState(null);
   useEffect(() => {
     async function fetchPages () {
       try {
@@ -21,11 +19,27 @@ export const App = () => {
     fetchPages()
   }, [])
 
+  const handlePageClick = (Page) => {
+    setSelectedPage(Page);
+
+  };
+
+  const handleBackToList = () => {
+    setSelectedPage(null);
+  };
+
   return (
-		<main>
+    <main>
       <h1>WikiVerse</h1>
-			<h2>An interesting 📚</h2>
-			<PagesList pages={pages} />
-		</main>
-  )
-}
+      <h2>An interesting 📚</h2>
+      {selectedPage ? (
+        <div>
+          <Page page={selectedPage} />
+     <button onClick={handleBackToList}>Back to Wiki List</button>
+        </div>
+      ) : (
+        <PagesList pages={pages} onPageClick={handlePageClick} />
+      )}
+    </main>
+  );
+};
